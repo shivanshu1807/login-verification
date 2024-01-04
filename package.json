@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongodb": "^5.5.0",
+    "mongoose": "^7.1.2",
+    "nodemon": "^2.0.22"
+  },
+  "name": "login-verification",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2",
+    "vite": "^4.3.8"
+  },
+  "scripts": {
+    "shiv": "nodemon app.js",
+    "start": "vite"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

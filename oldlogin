@@ -1,0 +1,86 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const app = express();
+const PORT = 8080; // Change this to your desired port number
+
+// MongoDB connection
+mongoose.connect('mongodb://127.0.0.1:27017/mydatabase', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('Failed to connect to MongoDB', err));
+
+// User model
+const User = mongoose.model('User', {
+    name: String,
+    address: String,
+    phno: String,
+    phnoo: String,
+    email: String,
+    nation: String,
+    password: String,
+});
+
+app.use(bodyParser.json());
+
+// Registration endpoint
+app.post('/register', async (req, res) => {
+  try {
+    const { name, address, phno, phnoo, email, nation, password } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+
+    // Create a new user
+    const user = new User({
+        name,
+        address,
+        phno,
+        phnoo,
+        email,
+        nation,
+        password,
+    });
+
+    // Save the user to the database
+    await user.save();
+
+    res.status(200).json({ message: 'User registered successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+// Login endpoint
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Validate password
+    if (user.password !== password) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+
+    res.status(200).json({ message: 'Login successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
